@@ -1,23 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using MiniLoja.Infra.Data.Context;
+using MiniLoja.Api.Configurations;
 using MiniLoja.Infra.Data.Seeds;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddControllers().
-    ConfigureApiBehaviorOptions(options =>
-    {
-        options.SuppressConsumesConstraintForFormFileParameters = true;
-    });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<MiniLojaContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.AddApiConfig()
+       .AddCorsConfig()
+       .AddSwaggerConfig()
+       .AddDbContextConfig()
+       .AddIdentityConfig();
 
 var app = builder.Build();
 
@@ -25,9 +15,16 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("Development");
+}
+else
+{
+    app.UseCors("Production");
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

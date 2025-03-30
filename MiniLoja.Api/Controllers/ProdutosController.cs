@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MiniLoja.Domain.Entities;
 using MiniLoja.Infra.Data.Context;
 
 namespace MiniLoja.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase
@@ -19,10 +20,10 @@ namespace MiniLoja.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> Get()
         {
             var produtos = await _context.Produtos
-                .Include(p => p.Categoria)
+                //.Include(p => p.Categoria)
                 .ToListAsync();
 
             return Ok(produtos);
@@ -30,7 +31,7 @@ namespace MiniLoja.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("categoria/{idCategoria}")]
-        public async Task<IActionResult> GetPorCategoria(int idCategoria)
+        public async Task<ActionResult<IEnumerable<Produto>>> GetPorCategoria(int idCategoria)
         {
             var produtos = await _context.Produtos
                 .Include(p => p.Categoria)

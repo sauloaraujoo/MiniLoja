@@ -36,12 +36,51 @@ namespace MiniLoja.Infra.Data.Seeds
             {
                 await context.Database.MigrateAsync();
 
-                await EnsureSeedCategorias(context);
-                await EnsureSeedProdutos(context);
+                await EnsureSeedVendedorAsync(context, scope.ServiceProvider);
+                await EnsureSeedCategoriasAsync(context);
+                await EnsureSeedProdutosAsync(context);
             }
         }
 
-        private static async Task EnsureSeedCategorias(MiniLojaContext context)
+        private static async Task EnsureSeedVendedorAsync(MiniLojaContext context, IServiceProvider serviceProvider)
+        {
+            //if (context.Users.Any())
+            //    return;
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            var email = "admin@miniloja.com";
+            var usarAdmin = await userManager.FindByEmailAsync(email);
+
+            if (usarAdmin != null)
+                return;
+
+            var identityUser = new IdentityUser
+            {
+                Id = Guid.NewGuid().ToString(), 
+                UserName = "Admin",
+                Email = email,
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(identityUser, "Abc123!");
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Erro ao criar usuário: {errors}");
+            }
+
+            var vendedor = new Vendedor
+            {
+                AspnetUserId = identityUser.Id
+            };
+
+            await context.Vendedores.AddAsync(vendedor);
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task EnsureSeedCategoriasAsync(MiniLojaContext context)
         {
             if (context.Categorias.Any())
                 return;
@@ -57,7 +96,7 @@ namespace MiniLoja.Infra.Data.Seeds
             await context.SaveChangesAsync();
         }
 
-        private static async Task EnsureSeedProdutos(MiniLojaContext context)
+        private static async Task EnsureSeedProdutosAsync(MiniLojaContext context)
         {
             if (context.Produtos.Any())
                 return;

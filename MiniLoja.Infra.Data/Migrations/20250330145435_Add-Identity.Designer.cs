@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MiniLoja.Infra.Data.Context;
 
@@ -11,9 +12,11 @@ using MiniLoja.Infra.Data.Context;
 namespace MiniLoja.Infra.Data.Migrations
 {
     [DbContext(typeof(MiniLojaContext))]
-    partial class MiniLojaContextModelSnapshot : ModelSnapshot
+    [Migration("20250330145435_Add-Identity")]
+    partial class AddIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -301,37 +304,6 @@ namespace MiniLoja.Infra.Data.Migrations
                     b.ToTable("Produtos");
                 });
 
-            modelBuilder.Entity("MiniLoja.Domain.Entities.Vendedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AspnetUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("DataAtualizacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DataExclusao")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AspnetUserId");
-
-                    b.ToTable("Vendedores");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -392,17 +364,6 @@ namespace MiniLoja.Infra.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
-                });
-
-            modelBuilder.Entity("MiniLoja.Domain.Entities.Vendedor", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "AspnetUser")
-                        .WithMany()
-                        .HasForeignKey("AspnetUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AspnetUser");
                 });
 
             modelBuilder.Entity("MiniLoja.Domain.Entities.Categoria", b =>

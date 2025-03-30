@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace MiniLoja.Domain.Entities
 {
-    internal class Vendedor
+    public class Vendedor : Entity
     {
+        public string AspnetUserId { get; set; }
+        public IdentityUser AspnetUser { get; set; }
+
     }
 }
