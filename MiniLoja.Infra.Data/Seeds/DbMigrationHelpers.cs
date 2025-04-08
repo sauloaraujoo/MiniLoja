@@ -58,7 +58,7 @@ namespace MiniLoja.Infra.Data.Seeds
             var identityUser = new IdentityUser
             {
                 Id = Guid.NewGuid().ToString(), 
-                UserName = "Admin",
+                UserName = "adminloja",
                 Email = email,
                 EmailConfirmed = true
             };

@@ -33,25 +33,25 @@ namespace MiniLoja.Infra.Data.Repository
             return await DbSet.ToListAsync();
         }
 
-        public virtual async Task Adicionar(TEntity entity)
+        public virtual async Task AdicionarAsync(TEntity entity)
         {
             DbSet.Add(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Atualizar(TEntity entity)
+        public virtual async Task AtualizarAsync(TEntity entity)
         {
             DbSet.Update(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Remover(int id)
+        public virtual async Task RemoverAsync(int id)
         {
             DbSet.Remove(new TEntity { Id = id });
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await Db.SaveChangesAsync();
         }

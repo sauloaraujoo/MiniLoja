@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MiniLoja.Api.DTOs;
 using MiniLoja.Domain.Entities;
 using MiniLoja.Infra.Data.Context;
 
@@ -16,6 +17,13 @@ namespace MiniLoja.Api.Controllers
         public ProdutosController(MiniLojaContext context)
         {
             _context = context;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] ProdutoDto produtoDto)
+        {
+            //TODO:
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -39,6 +47,20 @@ namespace MiniLoja.Api.Controllers
                 .ToListAsync();
 
             return Ok(produtos);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] ProdutoDto produtoDto)
+        {
+            //TODO:
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            //TODO:
+            return Ok();
         }
     }
 }
