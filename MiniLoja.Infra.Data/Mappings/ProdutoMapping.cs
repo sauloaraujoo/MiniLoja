@@ -11,14 +11,11 @@ namespace MiniLoja.Infra.Data.Mappings
             builder.ToTable("Produtos");
 
             builder.Property(p => p.Nome)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
-            builder.Property(p => p.Descricao)
-                .HasMaxLength(500);
+            builder.Property(p => p.Descricao);
 
-            builder.Property(p => p.Imagem)
-                .HasMaxLength(250);
+            builder.Property(p => p.Imagem);
 
             builder.Property(p => p.Preco)
                 .HasPrecision(18, 2);

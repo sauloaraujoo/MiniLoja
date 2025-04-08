@@ -11,11 +11,9 @@ namespace MiniLoja.Infra.Data.Mappings
             builder.ToTable("Categorias");
 
             builder.Property(c => c.Nome)
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
-            builder.Property(c => c.Descricao)
-                .HasMaxLength(500);
+            builder.Property(c => c.Descricao);
 
             builder.Property(c => c.DataCriacao)
                 .IsRequired();

@@ -9,7 +9,7 @@ namespace MiniLoja.Api.Configurations
         {
             builder.Services.AddDbContext<MiniLojaContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             return builder;
