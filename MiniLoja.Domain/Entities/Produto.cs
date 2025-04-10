@@ -20,8 +20,11 @@ namespace MiniLoja.Domain.Entities
 
         public int CategoriaId { get; set; }
 
+        public int VendedorId { get; set; } 
+
         public Categoria Categoria { get; set; }
 
-        //TODO: Ligação com o vendedor
+        public Vendedor Vendedor { get; set; } 
+
     }
 }

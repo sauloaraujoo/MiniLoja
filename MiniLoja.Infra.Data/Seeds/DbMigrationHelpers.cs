@@ -111,6 +111,10 @@ namespace MiniLoja.Infra.Data.Seeds
                 if (categoriaDrone == null || categoriaCelular == null)
                 return;
 
+            var vendedor = await context.Vendedores.FirstOrDefaultAsync();
+            if (vendedor == null)
+                return;
+
             var produtos = new List<Produto>
             {
                 new Produto
@@ -120,7 +124,8 @@ namespace MiniLoja.Infra.Data.Seeds
                     Imagem = "",
                     Preco = 7999.99M,
                     QtdEstoque = 50,
-                    CategoriaId = categoriaCelular.Id
+                    CategoriaId = categoriaCelular.Id,
+                    VendedorId = vendedor.Id
                 },
                 new Produto
                 {
@@ -129,7 +134,8 @@ namespace MiniLoja.Infra.Data.Seeds
                     Imagem = "",
                     Preco = 10490,
                     QtdEstoque = 20,
-                    CategoriaId = categoriaDrone.Id
+                    CategoriaId = categoriaDrone.Id,
+                    VendedorId = vendedor.Id
                 }
             };
 
