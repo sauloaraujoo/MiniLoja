@@ -8,6 +8,7 @@ using MiniLoja.Business.Vendedores;
 using MiniLoja.Domain.Entities;
 using MiniLoja.Domain.Settings;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace MiniLoja.Api.Controllers
@@ -57,7 +58,7 @@ namespace MiniLoja.Api.Controllers
                 await _vendedorRepository.AdicionarAsync(vendedor);
 
                 await _signInManager.SignInAsync(user, false);
-                return Ok(GerarJwt());
+                return Ok(await GerarJwt(user.Email));
             }
 
             var erros = string.Join(" | ", result.Errors.Select(e => e.Description));
@@ -78,20 +79,35 @@ namespace MiniLoja.Api.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(GerarJwt());
+                return Ok(await GerarJwt(loginUser.Email));
             }
 
             return Problem("Falha ao logar.");
         }
 
-        private string GerarJwt()
+        private async Task<string> GerarJwt(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+            };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Segredo);
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
+                Subject = new ClaimsIdentity(claims),
                 Issuer = _jwtSettings.Emissor,
                 Audience = _jwtSettings.Audiencia,
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.ExpiracaoHoras),

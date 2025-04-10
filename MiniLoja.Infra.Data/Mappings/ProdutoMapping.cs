@@ -32,6 +32,10 @@ namespace MiniLoja.Infra.Data.Mappings
             builder.HasOne(p => p.Categoria)
                 .WithMany(c => c.Produtos)
                 .HasForeignKey(p => p.CategoriaId);
+
+            builder.HasOne(p => p.Vendedor)
+                .WithMany(c => c.Produtos)
+                .HasForeignKey(p => p.VendedorId);
         }
     }
 }
