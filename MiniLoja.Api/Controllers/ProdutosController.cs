@@ -24,7 +24,6 @@ namespace MiniLoja.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProdutoDto), StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
-        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] ProdutoDto produtoDto)
         {
             if (_context.Produtos == null)
