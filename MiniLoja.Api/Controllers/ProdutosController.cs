@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using MiniLoja.Api.DTOs;
 using MiniLoja.Domain.Entities;
@@ -24,7 +25,7 @@ namespace MiniLoja.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProdutoDto), StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> Post([FromBody] ProdutoDto produtoDto)
+        public async Task<IActionResult> Post([FromForm] ProdutoDto produtoDto)
         {
             if (_context.Produtos == null)
             {
@@ -56,7 +57,7 @@ namespace MiniLoja.Api.Controllers
             {
                 Nome = produtoDto.Nome,
                 Descricao = produtoDto.Descricao,
-                Imagem = produtoDto.Imagem,
+                Imagem = await GetPathImagem(produtoDto.Imagem),
                 Preco = produtoDto.Preco,
                 QtdEstoque = produtoDto.QtdEstoque,
                 CategoriaId = produtoDto.CategoriaId,
@@ -133,7 +134,7 @@ namespace MiniLoja.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> Put(int id, [FromBody] ProdutoDto produtoDto)
+        public async Task<IActionResult> Put(int id, [FromForm] ProdutoDto produtoDto)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
@@ -151,11 +152,23 @@ namespace MiniLoja.Api.Controllers
 
             produto.Nome = produtoDto.Nome;
             produto.Descricao = produtoDto.Descricao;
-            produto.Imagem = produtoDto.Imagem;
+            produto.Imagem = await GetPathImagem(produtoDto.Imagem);
             produto.Preco = produtoDto.Preco;
             produto.QtdEstoque = produtoDto.QtdEstoque;
             produto.DataAtualizacao = DateTime.Now;
             produto.Ativo = true;
+
+            if (produtoDto.Imagem != null && produtoDto.Imagem.Length > 0)
+            {
+                DeleteImagem(produto.Imagem);
+
+                produto.Imagem = await GetPathImagem(produtoDto.Imagem);
+            }
+            else if (string.IsNullOrEmpty(produtoDto.Imagem?.FileName))
+            {
+                DeleteImagem(produto.Imagem);
+                produto.Imagem = string.Empty;
+            }
 
             _context.Entry(produto).State = EntityState.Modified;
 
@@ -194,10 +207,52 @@ namespace MiniLoja.Api.Controllers
                 return Unauthorized();
             }
 
+            DeleteImagem(produto.Imagem);
+
             _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("download/{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DownloadImage(int productId)
+        {
+            if (_context.Produtos == null)
+            {
+                return NotFound();
+            }
+
+            var produto = await _context.Produtos.FindAsync(productId);
+
+            if (produto == null || string.IsNullOrEmpty(produto.Imagem))
+            {
+                return NotFound();
+            }
+
+            var fullPath = Path.Combine("wwwroot", produto.Imagem);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return NotFound();
+            }
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(fullPath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fullPath, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return File(memory, contentType, Path.GetFileName(fullPath));
         }
 
         private async Task<bool> TemPermissaoDoVendedor(int vendedorId)
@@ -211,6 +266,37 @@ namespace MiniLoja.Api.Controllers
             var aspnetUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             return vendedor.AspnetUserId == aspnetUserId;
+        }
+
+        private async Task<string> GetPathImagem(IFormFile imagem)
+        {
+            if (imagem != null && imagem.Length > 0)
+            {
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(imagem.FileName)}";
+                var path = Path.Combine("wwwroot", "Imagens", fileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await imagem.CopyToAsync(stream);
+                }
+
+                return $"Imagens/{fileName}";
+            }
+
+            return string.Empty;
+        }
+
+        private void DeleteImagem(string imagePath)
+        {
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                var fullPath = Path.Combine("wwwroot", imagePath);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+            }
         }
     }
 }

@@ -121,7 +121,7 @@ namespace MiniLoja.Infra.Data.Seeds
                 {
                     Nome = "S25 Ultra",
                     Descricao = "Smartphone Samsung S25 Ultra 256GB",
-                    Imagem = "",
+                    Imagem = "Imagens/1d5820a5-fc67-4e31-850b-ba13fd4e2276.jpg",
                     Preco = 7999.99M,
                     QtdEstoque = 50,
                     CategoriaId = categoriaCelular.Id,
@@ -131,7 +131,7 @@ namespace MiniLoja.Infra.Data.Seeds
                 {
                     Nome = "Drone DJI Mini 4 Pro",
                     Descricao = "Drone DJI Mini 4 Pro Fly More Combo (Com tela)",
-                    Imagem = "",
+                    Imagem = "Imagens/76aec863-6a89-4060-acae-fa4d9a82f5d7.png",
                     Preco = 10490,
                     QtdEstoque = 20,
                     CategoriaId = categoriaDrone.Id,
