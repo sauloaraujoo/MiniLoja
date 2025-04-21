@@ -63,7 +63,7 @@ namespace MiniLoja.Infra.Data.Seeds
                 EmailConfirmed = true
             };
 
-            var result = await userManager.CreateAsync(identityUser, "Abc123!");
+            var result = await userManager.CreateAsync(identityUser, "Abcd1234!");
 
             if (!result.Succeeded)
             {
