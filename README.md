@@ -10,7 +10,7 @@ Desenvolver uma aplicação web básica usando conceitos do Módulo 1 (C#, ASP.N
 
 ## **2. Proposta do Projeto**
 O projeto inclui:
-- **🖥 Aplicação MVC:** Interface web para interação com a mini loja (TODO).
+- **🖥 Aplicação MVC:** Interface web para interação com a mini loja.
 - **🌐 API RESTful:** Exposição dos recursos da mini loja para integração com outras aplicações ou desenvolvimento de front-ends alternativos.
 - **🔒 Autenticação e Autorização:** Usuários vendedores podem registrar/login e gerenciar seus próprios produtos.
 - **💾 Acesso a Dados:** Implementação de acesso ao banco de dados através de ORM.
@@ -31,10 +31,13 @@ O projeto inclui:
 A estrutura do projeto é organizada da seguinte forma:
 ```
 MiniLoja/
-  ├── MiniLoja.Api/         # API RESTful
-  ├── MiniLoja.Business/    # Camada de regras de negócio e validações
-  ├── MiniLoja.Domain/      # Entidades, interfaces de repositório
-  ├── MiniLoja.Infra.Data 	# EF Core, mapeamentos, contextos
+  └── src/
+      ├── MiniLoja.Api/         # API RESTful
+      ├── MiniLoja.App/         # Aplicação ASP.NET Core MVC
+      ├── MiniLoja.Core/
+      │   ├── MiniLoja.Business/    # Camada de regras de negócio e validações
+      │   ├── MiniLoja.Domain/      # Entidades e interfaces de repositório
+      │   └── MiniLoja.Infra.Data/  # EF Core, mapeamentos, contextos
 README.md               	# Arquivo de Documentação do Projeto
 FEEDBACK.md             	# Arquivo para Consolidação dos Feedbacks
 .gitignore              	# Arquivo de Ignoração do Git
@@ -66,14 +69,14 @@ FEEDBACK.md             	# Arquivo para Consolidação dos Feedbacks
 
 3. **Executar a Aplicação MVC:**
    ```bash
-   cd MiniLoja/
+   cd src/MiniLoja.App/
    dotnet run
    ```
-   - TODO
+   - Acesse a aplicação em: https://localhost:7099
 
 4. **Executar a API:**
    ```bash
-   cd MiniLoja/
+   cd src/MiniLoja.Api/
    dotnet run
    ```
    - Acesse a documentação da API em: [http://localhost:7276/swagger](http://localhost:7276/swagger)
