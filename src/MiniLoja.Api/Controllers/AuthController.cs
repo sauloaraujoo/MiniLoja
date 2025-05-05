@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MiniLoja.Api.Models;
+using MiniLoja.Api.DTOs;
 using MiniLoja.Core.Business.Vendedores;
 using MiniLoja.Core.Domain.Entities;
 using MiniLoja.Core.Domain.Settings;
@@ -35,7 +35,7 @@ namespace MiniLoja.Api.Controllers
         }
 
         [HttpPost("registrar")]
-        public async Task<ActionResult> Registrar(RegisterUserVM registerUser)
+        public async Task<ActionResult> Registrar(RegisterUserDto registerUser)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
@@ -67,7 +67,7 @@ namespace MiniLoja.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginUserVM loginUser)
+        public async Task<ActionResult> Login(LoginUserDto loginUser)
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 

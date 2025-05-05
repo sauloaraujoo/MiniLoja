@@ -1,0 +1,26 @@
+﻿@model MiniLoja.Core.Domain.Entities.Produto
+
+@{
+    ViewData["Title"] = "Excluir Produto";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <div>
+        <strong>Nome:</strong> @Model.Nome<br />
+        <strong>Descrição:</strong> @Model.Descricao<br />
+        <strong>Preço:</strong> R$ @Model.Preco<br />
+        @if (!string.IsNullOrEmpty(Model.Imagem))
+        {
+            <img src="~/@Model.Imagem" alt="Imagem" width="200" />
+        }
+    </div>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Excluir" class="btn btn-danger" /> |
+        <a asp-action="Index">Voltar</a>
+    </form>
+</div>

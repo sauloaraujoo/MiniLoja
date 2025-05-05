@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MiniLoja.Api.Models
+namespace MiniLoja.Api.DTOs
 {
-    public class LoginUserVM
+    public class LoginUserDto
     {
         [Required(ErrorMessage = "Campo {0} obrigatório.")]
         [EmailAddress(ErrorMessage = "Campo {0} está em formato inválido.")]

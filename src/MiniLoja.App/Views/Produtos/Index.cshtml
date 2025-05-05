@@ -1,0 +1,43 @@
+﻿@model IEnumerable<MiniLoja.Core.Domain.Entities.Produto>
+
+@{
+    ViewData["Title"] = "Meus produtos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Novo Produto</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Categoria</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Imagem))
+                    {
+                        <img src="~/@item.Imagem" width="80" />
+                    }
+                </td>
+                <td>@item.Nome</td>
+                <td>R$ @item.Preco</td>
+                <td>@item.Categoria.Descricao</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

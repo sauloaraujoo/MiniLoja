@@ -1,0 +1,29 @@
+﻿@model MiniLoja.Core.Domain.Entities.Produto
+
+@{
+    ViewData["Title"] = "Detalhes de Produto";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <h1>@Model.Nome</h1>
+
+    <div>
+        <strong>Descrição:</strong> @Model.Descricao<br />
+        <strong>Preço:</strong> R$ @Model.Preco<br />
+        <strong>Estoque:</strong> @Model.QtdEstoque<br />
+        <strong>Categoria:</strong> @Model.Categoria.Descricao<br />
+        <strong>Imagem:</strong><br />
+        @if (!string.IsNullOrEmpty(Model.Imagem))
+        {
+            <img src="~/@Model.Imagem" alt="Imagem" width="200" />
+        }
+    </div>
+
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+    <a asp-action="Index">Voltar</a>
+</div>

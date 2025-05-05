@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MiniLoja.Api.Models
+namespace MiniLoja.Api.DTOs
 {
-    public class RegisterUserVM
+    public class RegisterUserDto
     {
         [Required(ErrorMessage = "Campo {0} obrigatório.")]
         [StringLength(100, ErrorMessage = "Campo {0} precisa ter entre {1} e {2} caracteres.", MinimumLength = 2)]

@@ -1,23 +1,19 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MiniLoja.Core.Data.Context;
+using MiniLoja.App.Configurations;
 using MiniLoja.Core.Data.Seeds;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<MiniLojaContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddDbContextConfig(builder.Configuration);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<MiniLojaContext>();
+builder.Services.AddIdentity();
+
+builder.Services.AddDependencyInjection();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
 
 var app = builder.Build();
 
