@@ -36,6 +36,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.AddGlobalizationConfig();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

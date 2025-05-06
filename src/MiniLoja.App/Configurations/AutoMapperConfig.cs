@@ -9,8 +9,11 @@ namespace MiniLoja.App.Configurations
         public AutoMapperConfig()
         {
             CreateMap<Categoria, CategoriaViewModel>().ReverseMap();
-            CreateMap<Produto, ProdutoViewModel>().ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Categoria.Nome));
-            CreateMap<ProdutoViewModel, Produto>();
+            CreateMap<Produto, ProdutoViewModel>()
+                .ForMember(dest => dest.Imagem, opt => opt.Ignore()) 
+                .ForMember(dest => dest.ImagemPath, opt => opt.MapFrom(src => src.Imagem))
+                .ReverseMap()
+                .ForMember(dest => dest.Imagem, opt => opt.Ignore());
         }
     }
 }

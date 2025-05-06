@@ -49,5 +49,24 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/localization/messages_pt_BR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        jQuery.validator.methods.number = function (value, element) {
+            value = value.replace(',', '.');
+            return this.optional(element) || !isNaN(parseFloat(value));
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const precoInput = document.querySelector('input[name="Preco"]');
+        if (precoInput) {
+            precoInput.addEventListener('input', function () {
+                this.value = this.value.replace(/[^0-9,]/g, '');
+            });
+        }
+    });
+    </script>
 </body>
 </html>

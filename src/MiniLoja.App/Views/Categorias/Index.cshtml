@@ -6,6 +6,16 @@
 
 <h1>@ViewData["Title"]</h1>
 
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Sucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+}
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
 <p>
     <a asp-action="Create">Nova Categoria</a>
 </p>

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,12 +15,13 @@ namespace MiniLoja.App.Controllers
     {
         private readonly MiniLojaContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
 
-        public ProdutosController(MiniLojaContext context, IWebHostEnvironment env)
+        public ProdutosController(MiniLojaContext context, IWebHostEnvironment env, IMapper mapper)
         {
             _context = context;
             _env = env;
-
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -59,8 +61,7 @@ namespace MiniLoja.App.Controllers
         public IActionResult Create()
         {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descricao");
-            ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "AspnetUserId");
-            return View();
+            return View(new ProdutoViewModel());
         }
 
         [HttpPost]
@@ -80,20 +81,14 @@ namespace MiniLoja.App.Controllers
 
             var imagemPath = await SalvarImagem(model.Imagem);
 
-            var produto = new Produto
-            {
-                Nome = model.Nome,
-                Descricao = model.Descricao,
-                Imagem = imagemPath,
-                Preco = model.Preco,
-                QtdEstoque = model.QtdEstoque,
-                CategoriaId = model.CategoriaId,
-                VendedorId = vendedor.Id
-            };
+            var produto = _mapper.Map<Produto>(model);
+            produto.Imagem = imagemPath;
+            produto.VendedorId = vendedor.Id;
 
             _context.Produtos.Add(produto);
             await _context.SaveChangesAsync();
 
+            TempData["Sucesso"] = "Produto criado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -109,17 +104,8 @@ namespace MiniLoja.App.Controllers
 
             if (!TemPermissaoDoVendedor(produto.Vendedor.AspnetUserId)) return Unauthorized();
 
-            var model = new ProdutoViewModel
-            {
-                Id = produto.Id,
-                Nome = produto.Nome,
-                Descricao = produto.Descricao,
-                Preco = produto.Preco,
-                QtdEstoque = produto.QtdEstoque,
-                CategoriaId = produto.CategoriaId,
-                VendedorId = produto.VendedorId,
-                ImagemPath = produto.Imagem
-            };
+            var model = _mapper.Map<ProdutoViewModel>(produto);
+            model.ImagemPath = produto.Imagem;
 
             ViewData["CategoriaId"] = new SelectList(await _context.Categorias.ToListAsync(), "Id", "Descricao", model.CategoriaId);
             ViewData["VendedorId"] = new SelectList(_context.Vendedores, "Id", "AspnetUserId", produto.VendedorId);
@@ -162,6 +148,7 @@ namespace MiniLoja.App.Controllers
             _context.Update(produto);
             await _context.SaveChangesAsync();
 
+            TempData["Sucesso"] = "Produto atualizado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -194,6 +181,7 @@ namespace MiniLoja.App.Controllers
             _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
 
+            TempData["Sucesso"] = "Produto excluído com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 

@@ -14,16 +14,20 @@ namespace MiniLoja.App.Models
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(255, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
+        [Display(Name = "Descrição")]
         public string Descricao { get; set; }
 
-        public IFormFile Imagem { get; set; }
+        [Display(Name = "Imagem")]
+        public IFormFile? Imagem { get; set; }
 
         public string? ImagemPath { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "O preço deve ser maior que zero.")]
+        [Display(Name = "Preço")]
         public decimal Preco { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "O estoque deve ser maior que zero")]
+        [Display(Name = "Estoque")]
+        [Range(0, int.MaxValue, ErrorMessage = "O estoque não pode ser negativo.")]
         public int QtdEstoque { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]

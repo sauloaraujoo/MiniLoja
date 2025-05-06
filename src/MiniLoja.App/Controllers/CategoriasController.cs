@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MiniLoja.App.Models;
@@ -11,23 +12,18 @@ namespace MiniLoja.App.Controllers
     public class CategoriasController : Controller
     {
         private readonly MiniLojaContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoriasController(MiniLojaContext context)
+        public CategoriasController(MiniLojaContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var categorias = await _context.Categorias
-                .Select(c => new CategoriaViewModel
-                {
-                    Id = c.Id,
-                    Nome = c.Nome,
-                    Descricao = c.Descricao
-                }).ToListAsync();
-
-            return View(categorias);
+            var categorias = await _context.Categorias.ToListAsync();
+            return View(_mapper.Map<IEnumerable<CategoriaViewModel>>(categorias));
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -37,14 +33,7 @@ namespace MiniLoja.App.Controllers
             var categoria = await _context.Categorias.FindAsync(id);
             if (categoria == null) return NotFound();
 
-            var viewModel = new CategoriaViewModel
-            {
-                Id = categoria.Id,
-                Nome = categoria.Nome,
-                Descricao = categoria.Descricao
-            };
-
-            return View(viewModel);
+            return View(_mapper.Map<CategoriaViewModel>(categoria));
         }
 
         public IActionResult Create()
@@ -58,17 +47,14 @@ namespace MiniLoja.App.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var categoria = new Categoria
-            {
-                Nome = model.Nome,
-                Descricao = model.Descricao,
-                Ativo = true,
-                DataCriacao = DateTime.Now
-            };
+            var categoria = _mapper.Map<Categoria>(model);
+            categoria.Ativo = true;
+            categoria.DataCriacao = DateTime.Now;
 
             _context.Add(categoria);
             await _context.SaveChangesAsync();
 
+            TempData["Sucesso"] = "Categoria criado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -79,15 +65,8 @@ namespace MiniLoja.App.Controllers
             var categoria = await _context.Categorias.FindAsync(id);
             if (categoria == null) return NotFound();
 
-            var viewModel = new CategoriaViewModel
-            {
-                Id = categoria.Id,
-                Nome = categoria.Nome,
-                Descricao = categoria.Descricao
-            };
-
             ViewBag.Id = categoria.Id;
-            return View(viewModel);
+            return View(_mapper.Map<CategoriaViewModel>(categoria));
         }
 
         [HttpPost]
@@ -99,13 +78,13 @@ namespace MiniLoja.App.Controllers
             var categoria = await _context.Categorias.FindAsync(id);
             if (categoria == null) return NotFound();
 
-            categoria.Nome = model.Nome;
-            categoria.Descricao = model.Descricao;
+            _mapper.Map(model, categoria);
             categoria.DataAtualizacao = DateTime.Now;
 
             _context.Update(categoria);
             await _context.SaveChangesAsync();
 
+            TempData["Sucesso"] = "Categoria criado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -116,14 +95,8 @@ namespace MiniLoja.App.Controllers
             var categoria = await _context.Categorias.FindAsync(id);
             if (categoria == null) return NotFound();
 
-            var viewModel = new CategoriaViewModel
-            {
-                Nome = categoria.Nome,
-                Descricao = categoria.Descricao
-            };
-
             ViewBag.Id = categoria.Id;
-            return View(viewModel);
+            return View(_mapper.Map<CategoriaViewModel>(categoria));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -139,19 +112,14 @@ namespace MiniLoja.App.Controllers
             if (categoria.Produtos.Any())
             {
                 ModelState.AddModelError("", "Não é possível excluir uma categoria com produtos associados.");
-
-                var viewModel = new CategoriaViewModel
-                {
-                    Id = categoria.Id,
-                    Nome = categoria.Nome,
-                    Descricao = categoria.Descricao
-                };
-
+                var viewModel = _mapper.Map<CategoriaViewModel>(categoria);
                 return View(viewModel);
             }
 
             _context.Categorias.Remove(categoria);
             await _context.SaveChangesAsync();
+
+            TempData["Sucesso"] = "Categoria excluído com sucesso!";
             return RedirectToAction(nameof(Index));
         }
     }

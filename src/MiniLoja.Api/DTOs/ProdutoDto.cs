@@ -14,10 +14,10 @@ namespace MiniLoja.Api.DTOs
 
         public IFormFile Imagem { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "O preço deve ser maior que zero.")]
         public decimal Preco { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "O estoque deve ser maior que zero")]
+        [Range(0, int.MaxValue, ErrorMessage = "O estoque não pode ser negativo.")]
         public int QtdEstoque { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
