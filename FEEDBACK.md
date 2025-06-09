@@ -1,55 +1,88 @@
-
 # Feedback - Avaliação Geral
 
 ## Front End
+
 ### Navegação
+  * Pontos positivos:
+    - Projeto MVC com navegação funcional e views completas para produtos, categorias e autenticação.
 
   * Pontos negativos:
-    - Não há evidências de um projeto MVC implementado
+    - Nenhum.
 
 ### Design
-    - Será avaliado na entrega final
-
-### Funcionalidade
-
-  * Pontos negativos:
-    - Não há evidências de um projeto MVC implementado
-
-## Back End
-### Arquitetura
-  * Pontos negativos:
-    - Não faz sentido algum uma camada "Business" e outra "Domain"
-    - Nenhuma das duas camadas são necessárias, apenas um projeto Core englobando Business e Data já atenderia um projeto deste escopo.
+  - Interface clara e funcional, adequada ao propósito administrativo da aplicação.
 
 ### Funcionalidade
   * Pontos positivos:
-    - Implementação de API RESTful para operações CRUD, conforme esperado para o back-end.
-    - Uso do Entity Framework Core com SQLite, conforme especificação.
-    - Documentação da API via Swagger está presente.
-    - Identity cria e vincula Vendedor no momento do registro
+    - CRUD completo de produtos e categorias na API e no MVC.
+    - Autenticação funcional com Identity (JWT na API, Cookie no MVC).
+    - Criação de vendedor associada ao usuário do Identity (compartilhando ID) está corretamente implementada.
+    - Migrations automáticas, seed de dados e uso do SQLite funcionais.
+    - Arquitetura enxuta e aderente ao escopo do projeto.
+
+  * Pontos negativos:
+    - `Vendedor` faz composição com `IdentityUser`, o que causa um acoplamento indesejado e corrompe a responsabilidade da implementação.
+
+## Back End
+
+### Arquitetura
+  * Pontos positivos:
+    - Estrutura com três camadas bem definidas: API, App, Core.
+    - Boas práticas na configuração de serviços, autenticação e rotas.
+
+  * Pontos negativos:
+    - Idealmente, `Vendedor` deveria ser uma entidade independente com o mesmo ID do usuário do Identity.
+
+### Funcionalidade
+  * Pontos positivos:
+    - Todas as funcionalidades principais implementadas de forma robusta.
+
+  * Pontos negativos:
+    - Nenhum.
 
 ### Modelagem
   * Pontos positivos:
-    - Estrutura de modelagem simples, com entidades e interfaces localizadas na camada `Domain`.
-
-  * Pontos negativos:
-    - A distribuição de camadas está muito sem sentido.
+    - Entidades bem estruturadas, coerentes e com relações de domínio claras.
 
 ## Projeto
+
 ### Organização
   * Pontos positivos:
-    - O arquivo de solução (`MiniLoja.sln`) está presente na raiz do repositório.
+    - Uso correto da pasta `src`, `.sln` na raiz, separação adequada por camadas.
+    - `README.md` e `FEEDBACK.md` presentes.
+    - Organização dos arquivos coerente.
 
   * Pontos negativos:
-    - Não há uso da pasta `src` na raiz, mas a organização por pastas de projeto está adequada.
+    - Nenhum.
 
 ### Documentação
   * Pontos positivos:
-    - O repositório possui um arquivo `README.md` bem documentado, com informações do projeto e instruções de execução.
-    - O arquivo `FEEDBACK.md` está presente.
-    - Documentação automática da API via Swagger.
+    - Documentação clara e padronizada.
+    - Swagger configurado na API.
+
+  * Pontos negativos:
+    - Nenhum.
 
 ### Instalação
   * Pontos positivos:
-    - Implementação do SQLite como banco de dados.
-    - O README indica que o seed de dados e as migrations são aplicados automaticamente ao iniciar a aplicação.
+    - Execução simples com SQLite e migrations automáticas.
+    - Banco populado com seed de dados no startup.
+
+  * Pontos negativos:
+    - Nenhum.
+
+---
+
+# 📊 Matriz de Avaliação de Projetos
+
+| **Critério**                   | **Peso** | **Nota** | **Resultado Ponderado**                  |
+|-------------------------------|----------|----------|------------------------------------------|
+| **Funcionalidade**            | 30%      | 10       | 3,0                                      |
+| **Qualidade do Código**       | 20%      | 10       | 2,0                                      |
+| **Eficiência e Desempenho**   | 20%      | 9        | 1,8                                      |
+| **Inovação e Diferenciais**   | 10%      | 9        | 0,9                                      |
+| **Documentação e Organização**| 10%      | 10       | 1,0                                      |
+| **Resolução de Feedbacks**    | 10%      | 10       | 1,0                                      |
+| **Total**                     | 100%     | -        | **9,7**                                  |
+
+## 🎯 **Nota Final: 9,7 / 10**
